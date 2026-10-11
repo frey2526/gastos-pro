@@ -1,0 +1,12 @@
+# Entorno virtual de Python
+.venv/
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Datos locales (no subir datos personales)
+gastos.json
+
+# macOS / editor
+.DS_Store
