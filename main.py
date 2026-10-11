@@ -1,4 +1,5 @@
 from rich.console import Console
+from rich.markup import escape
 from rich.prompt import Prompt
 from rich.table import Table
 
@@ -60,12 +61,35 @@ def por_categoria(gastos):
         console.print(f"- {cat}: {subtotal} €")
 
 
+def borrar(gastos):
+    if not gastos:
+        console.print("No hay gastos para borrar.")
+        return
+
+    for i, g in enumerate(gastos, start=1):
+        console.print(f"{i}. {g}", markup=False)
+
+    try:
+        numero = int(Prompt.ask("Número del gasto a borrar"))
+    except ValueError:
+        console.print("[red]Eso no es un número.[/red]")
+        return
+
+    if numero < 1 or numero > len(gastos):
+        console.print("[red]Ese número no existe.[/red]")
+        return
+
+    eliminado = gastos.pop(numero - 1)
+    guardar(gastos)
+    console.print(f"[green]Borrado: {escape(str(eliminado))}[/green]")
+
+
 def main():
     gastos = cargar()
     console.print("[bold cyan]=== GESTOR DE GASTOS ===[/bold cyan]")
 
     while True:
-        opcion = Prompt.ask("Opción: 1 agregar, 2 listar, 3 total, 4 por categoría, salir").strip().lower()
+        opcion = Prompt.ask("Opción: 1 agregar, 2 listar, 3 total, 4 por categoría, 5 borrar, salir").strip().lower()
 
         if opcion == "salir":
             console.print("[cyan]¡Hasta luego![/cyan]")
@@ -78,6 +102,8 @@ def main():
             total(gastos)
         elif opcion == "4":
             por_categoria(gastos)
+        elif opcion == "5":
+            borrar(gastos)
         else:
             console.print("[red]Opción no válida.[/red]")
 
