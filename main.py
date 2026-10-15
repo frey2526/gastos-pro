@@ -61,6 +61,25 @@ def por_categoria(gastos):
         console.print(f"- {cat}: {subtotal} €")
 
 
+def filtrar_por_categoria(gastos):
+    if not gastos:
+        console.print("No hay gastos todavía.")
+        return
+
+    categoria = Prompt.ask("Categoría a filtrar").strip().lower()
+    filtrados = [g for g in gastos if g.categoria == categoria]
+    if not filtrados:
+        console.print(f"No hay gastos en '{categoria}'.")
+        return
+
+    tabla = Table(title=f"Gastos de {categoria}")
+    tabla.add_column("Descripción")
+    tabla.add_column("Monto", justify="right")
+    for g in filtrados:
+        tabla.add_row(g.descripcion, f"{g.monto} €")
+    console.print(tabla)
+
+
 def borrar(gastos):
     if not gastos:
         console.print("No hay gastos para borrar.")
@@ -89,7 +108,7 @@ def main():
     console.print("[bold cyan]=== GESTOR DE GASTOS ===[/bold cyan]")
 
     while True:
-        opcion = Prompt.ask("Opción: 1 agregar, 2 listar, 3 total, 4 por categoría, 5 borrar, salir").strip().lower()
+        opcion = Prompt.ask("Opción: 1 agregar, 2 listar, 3 total, 4 por categoría, 5 borrar, 6 filtrar por categoría, salir").strip().lower()
 
         if opcion == "salir":
             console.print("[cyan]¡Hasta luego![/cyan]")
@@ -104,6 +123,8 @@ def main():
             por_categoria(gastos)
         elif opcion == "5":
             borrar(gastos)
+        elif opcion == "6":
+            filtrar_por_categoria(gastos)
         else:
             console.print("[red]Opción no válida.[/red]")
 
